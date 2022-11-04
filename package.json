@@ -1,0 +1,13 @@
+{
+  "name": "customers",
+  "version": "0.0.0",
+  "description": "Customers",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "node-input-validator": "^4.5.0"
+  }
+}

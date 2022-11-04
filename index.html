@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #292937;
+            padding: 30px;
+        }
+
+        div {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        .feedback-input {
+            color: #fff;
+            font-family: Helvetica, Arial, sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            border-radius: 5px;
+            line-height: 22px;
+            background-color: transparent;
+            border: 2px solid #6666CC;
+            transition: all 0.3s;
+            padding: 13px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            outline: 0;
+        }
+
+            .feedback-input:focus {
+                border: 4px solid #b2b2e5;
+            }
+
+        [type="button"] {
+            font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+            width: 15%;
+            background: #6666CC;
+            border-radius: 5px;
+            border: 0;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+            padding: 10px;
+            transition: all 0.3s;
+            margin: 10px;
+            font-weight: 700;
+        }
+
+            [type="button"]:hover {
+                background: #333366;
+            }
+
+        span {
+            font-size: 24px;
+            color: #fff;
+            display: block;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        // ***************************************************
+        // post Request event handler uses jQuery .post method
+        // to issue request and process response (callback)
+        let postFind = function () {
+            document.getElementById("displayResponse").style.display = "none";
+
+            $.post("/api/data", {
+                // this is the data being posted to the web server
+                cusID: document.getElementById("txtCusID").value,
+                btn: "Find"
+            },
+                // callback function returns status and data as object literal
+                function (data, status) {
+                    document.getElementById("txtFirst").value = data.first;
+                    document.getElementById("txtLast").value = data.last;
+                    document.getElementById("txtAddress").value = data.address;
+                    document.getElementById("txtCity").value = data.city;
+                    document.getElementById("txtProvince").value = data.province;
+                    document.getElementById("txtPostal").value = data.postal;
+                    document.getElementById("displayResponse").style.display = "block";
+                    document.getElementById("displayResponse").innerHTML = data.response;
+                    console.log(status);
+                    console.log(data);
+                });
+        }
+
+        //remove input in textboxes new button
+        let clearInput = () => { 
+            $("input:text").val(""); 
+        };
+
+        //add button
+        let postAdd = function () {
+            document.getElementById("displayResponse").style.display = "none";
+ 
+            $.post("/api/data", {
+                // this is the data being posted to the web server
+                cusID: document.getElementById("txtCusID").value,
+                FirstName: document.getElementById("txtFirst").value,
+                LastName: document.getElementById("txtLast").value,
+                Address: document.getElementById("txtAddress").value,
+                City: document.getElementById("txtCity").value,
+                Province: document.getElementById("txtProvince").value,
+                Postal: document.getElementById("txtPostal").value,
+                btn: "Add"
+            },
+                // callback function returns status and data as object literal
+                function (data, status) {
+                    document.getElementById("displayResponse").style.display = "block";
+                    document.getElementById("displayResponse").innerHTML = data;
+                    console.log(status);
+                });
+        };
+
+        //update button
+        let postUpdate = function () {
+            document.getElementById("displayResponse").style.display = "none";
+            $.post("/api/data", {
+                // this is the data being posted to the web server
+                cusID: document.getElementById("txtCusID").value,
+                FirstName: document.getElementById("txtFirst").value,
+                LastName: document.getElementById("txtLast").value,
+                Address: document.getElementById("txtAddress").value,
+                City: document.getElementById("txtCity").value,
+                Province: document.getElementById("txtProvince").value,
+                Postal: document.getElementById("txtPostal").value,
+                btn: "Update"
+            },
+                // callback function returns status and data as object literal
+                function (data, status) {
+                    document.getElementById("displayResponse").style.display = "block";
+                    document.getElementById("displayResponse").innerHTML = data;
+                    console.log(status);
+                });
+
+        }
+
+
+        //delete button
+        let postDelete = function () {
+            document.getElementById("displayResponse").style.display = "none";
+            let proceed = confirm("Confirm?");
+            if (proceed) {
+                //proceed
+                $.post("/api/data", {
+                    // this is the data being posted to the web server
+                    cusID: document.getElementById("txtCusID").value,
+                    FirstName: document.getElementById("txtFirst").value,
+                    LastName: document.getElementById("txtLast").value,
+                    Address: document.getElementById("txtAddress").value,
+                    City: document.getElementById("txtCity").value,
+                    Province: document.getElementById("txtProvince").value,
+                    Postal: document.getElementById("txtPostal").value,
+                    btn: "Delete"
+                },
+                    // callback function returns status and data as object literal
+                    function (data, status) {
+                        document.getElementById("displayResponse").style.display = "block";
+                        document.getElementById("displayResponse").innerHTML = data;
+                        //clear inputs
+                        clearInput();
+                    });
+            }           
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <span id="displayResponse"></span>
+        <input type="text" name="txtCusID" id="txtCusID" class="feedback-input" placeholder="Customer #">
+        <input type="text" name="txtFirst" id="txtFirst" class="feedback-input" placeholder="First Name">
+        <input type="text" name="txtLast" id="txtLast" class="feedback-input" placeholder="Last Name">
+        <input type="text" name="txtAddress" id="txtAddress" class="feedback-input" placeholder="Address">
+        <input type="text" name="txtCity" id="txtCity" class="feedback-input" placeholder="City">
+        <input type="text" name="txtProvince" id="txtProvince" class="feedback-input" placeholder="Province">
+        <input type="text" name="txtPostal" id="txtPostal" class="feedback-input" placeholder="Postal">
+
+        <input id="btnNew" type="button" onclick="clearInput();" value="New" />
+        <input id="btnAdd" type="button" onclick="postAdd();" value="Add" />
+        <input id="btnUpdate" type="button" onclick="postUpdate();" value="Update" />
+        <input id="btnDelete" type="button" onclick="postDelete();" value="Delete" />
+        <input id="btnFind" type="button" onclick="postFind();" value="Find" />
+
+        <!--Send an HTTP POST request to a page and get the results back-->
+    </div>
+</body>
+</html>
